@@ -1,4 +1,4 @@
-#include <../common/common.cxx>
+#include <common.h>
 
 // ****************************************************************************
 //  Function: AdvectWithEulerStep
