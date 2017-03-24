@@ -25,7 +25,7 @@
 //        Recall that speed is the magnitude of the velocity.
 //
 // ****************************************************************************
-float speedCal(float *velocity){
+float SpeedCal(float *velocity){
 	return sqrt(pow(velocity[0],2)+pow(velocity[1],2));
 }
 
@@ -40,7 +40,7 @@ AdvectWithEulerStep(const float *pt, const int *dims, const float *X,
     float startEvaluationField[2];
 	EvaluateVectorFieldAtLocation(pt,dims,X,Y,F,startEvaluationField);
 	//finding current speed of partical is 
-	speed[0] = speedCal(startEvaluationField);
+	speed[0] = SpeedCal(startEvaluationField);
 	
 	for ( int i = 1; i <nsteps; i++){
 			//new location
@@ -48,7 +48,7 @@ AdvectWithEulerStep(const float *pt, const int *dims, const float *X,
 			output_locations[2*i+1] = output_location[(i-1)*2 +1]+startEvaluationField[1]*h;
 			float newPt[2]= {output_locations[2*i],output_locations[2*i+1]);
 			EvaluateVectorFieldAtLocation(newPt,dims,X,Y,F,startEvaluationField);
-			speed[i] = speedCal(startEvaluationField);		
+			speed[i] = SpeedCal(startEvaluationField);		
 	}
 
 }

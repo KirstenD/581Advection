@@ -6,9 +6,9 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkSmartPointer.h>
-#include <../common/common.cxx>
-#include <../common/vtkcommon.cxx>
-#include <euler.cxx>
+#include <common.h>
+#include <vtkcommon.h>
+#include <euler.h>
 
 
 int main()
