@@ -1,5 +1,8 @@
 #include <common.h>
 #include <math.h>
+#include <stdio.h>
+#include <iostream>
+using namespace std;
 // ****************************************************************************
 //  Function: AdvectWithEulerStep
 //
@@ -37,19 +40,23 @@ AdvectWithEulerStep(const float *pt, const int *dims, const float *X,
 	//starting location  wich is also step 1
 	output_locations[0]= pt[0];
 	output_locations[1]= pt[1];
-    float startEvaluationField[2];
+        float startEvaluationField[2];
 	EvaluateVectorFieldAtLocation(pt,dims,X,Y,F,startEvaluationField);
 	//finding current speed of partical is 
+        //cout<< "Evaluation at : "<< 0 << " - " << startEvaluationField[0] << " : " << startEvaluationField[1]<<endl;	
+        //cout<< "OutputLocation at : "<<0<< " - " << pt[0] << " : " << pt[1]<<endl;	
 	speeds[0] = SpeedCal(startEvaluationField);
 	
-	for ( int i = 1; i <nsteps; i++){
+	for ( int i = 1; i <=nsteps; i++){
 			//new location
 			output_locations[2*i] = output_locations[(i-1)*2] + startEvaluationField[0]*h;
 			output_locations[2*i+1] = output_locations[(i-1)*2 +1]+startEvaluationField[1]*h;
 			float newPt[2]= {output_locations[2*i],output_locations[2*i+1]};
 			EvaluateVectorFieldAtLocation(newPt,dims,X,Y,F,startEvaluationField);
 			speeds[i] = SpeedCal(startEvaluationField);		
-	}
+          //              cout<< "Evaluation at : "<<i<< " - " << startEvaluationField[0] << " : " << startEvaluationField[1]<<endl;	
+            //            cout<< "OutputLocation at : "<<i<< " - " << newPt[0] << " : " << newPt[1]<<endl;	
+    }
 
 }
 
@@ -68,9 +75,9 @@ AdvectWithEulerStep(const float *pt, const int *dims, const float *X,
 float
 CalculateArcLength(const float *output_locations, int nlocations)
 {
-	float arcLength = 0.0;
+	float arcLength = 0.f;
 	for (int i=0; i<nlocations-1; i++){
-			float arcX = output_locations[2*i+2] -output_locations[2*i];
+		    float arcX = output_locations[2*i+2] -output_locations[2*i];
 		    float arcY = output_locations[2*i+3] -output_locations[2*i+1];
 			arcLength+= sqrt(pow(arcX,2)+pow(arcY,2));
 
