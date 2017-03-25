@@ -1,26 +1,11 @@
-#include <vtkImageData.h>
-#include <vtkPNGWriter.h>
-#include <vtkPointData.h>
-#include <vtkCellArray.h>
-#include <vtkPoints.h>
-#include <vtkUnsignedCharArray.h>
-#include <vtkFloatArray.h>
-#include <vtkDataSetReader.h>
-#include <vtkRectilinearGrid.h>
-#include <vtkFloatArray.h>
-#include <vtkPolyData.h>
-#include <vtkDataSetWriter.h>
-#include <vtkTubeFilter.h>
-#include <vtkPolyDataNormals.h>
-#include <vtkSphereSource.h>
-
+#include <vtkcommon.h>
 void
 WriteImage(vtkImageData *img, const char *filename)
 {
     std::string full_filename = filename;
     full_filename += ".png";
     vtkPNGWriter *writer = vtkPNGWriter::New();
-    writer->SetInput(img);
+    writer->SetInputData(img);
     writer->SetFileName(full_filename.c_str());
     writer->Write();
     writer->Delete();
@@ -31,11 +16,11 @@ NewImage(int width, int height)
 {
     vtkImageData *image = vtkImageData::New();
     image->SetDimensions(width, height, 1);
-    image->SetWholeExtent(0, width-1, 0, height-1, 0, 0);
-    image->SetUpdateExtent(0, width-1, 0, height-1, 0, 0);
-    image->SetNumberOfScalarComponents(3);
-    image->SetScalarType(VTK_UNSIGNED_CHAR);
-    image->AllocateScalars();
+//    image->SetWholeExtent(0, width-1, 0, height-1, 0, 0);
+  //  image->SetUpdateExtent(0, width-1, 0, height-1, 0, 0);
+   // image->SetNumberOfScalarComponents(3);
+    //image->SetScalarType(VTK_UNSIGNED_CHAR);
+    image->AllocateScalars(VTK_UNSIGNED_CHAR,3);
 
     return image;
 }

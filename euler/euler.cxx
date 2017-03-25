@@ -1,5 +1,5 @@
 #include <common.h>
-
+#include <math.h>
 // ****************************************************************************
 //  Function: AdvectWithEulerStep
 //
@@ -35,20 +35,20 @@ AdvectWithEulerStep(const float *pt, const int *dims, const float *X,
                     float h, int nsteps, float *output_locations, float *speeds)
 {
 	//starting location  wich is also step 1
-	output_location[0]= pt[0];
-	output_location[1]= pt[1];
+	output_locations[0]= pt[0];
+	output_locations[1]= pt[1];
     float startEvaluationField[2];
 	EvaluateVectorFieldAtLocation(pt,dims,X,Y,F,startEvaluationField);
 	//finding current speed of partical is 
-	speed[0] = SpeedCal(startEvaluationField);
+	speeds[0] = SpeedCal(startEvaluationField);
 	
 	for ( int i = 1; i <nsteps; i++){
 			//new location
 			output_locations[2*i] = output_locations[(i-1)*2] + startEvaluationField[0]*h;
-			output_locations[2*i+1] = output_location[(i-1)*2 +1]+startEvaluationField[1]*h;
-			float newPt[2]= {output_locations[2*i],output_locations[2*i+1]);
+			output_locations[2*i+1] = output_locations[(i-1)*2 +1]+startEvaluationField[1]*h;
+			float newPt[2]= {output_locations[2*i],output_locations[2*i+1]};
 			EvaluateVectorFieldAtLocation(newPt,dims,X,Y,F,startEvaluationField);
-			speed[i] = SpeedCal(startEvaluationField);		
+			speeds[i] = SpeedCal(startEvaluationField);		
 	}
 
 }

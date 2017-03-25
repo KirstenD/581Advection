@@ -196,27 +196,27 @@ void EvaluateVectorFieldAtLocation(const float *pt, const int *dims, const float
 	
 	   // Need to convrer from cell index to point index
 	   //Get points from Lower left corner and Vecolocty values
-	   float LLC = GetPointIndex(cell, dims);
+	   int  LLC = GetPointIndex(cell, dims);
 	   float LLCV[2];
 	   LLCV[0] = F[LLC*2];
 	   LLCV[1] = F[LLC*2 +1];
 	   //Get Points from upper left corner
-	   float ULC = GetPointIndex(cellLocation, dims)+dims[0];
+	   int  ULC = GetPointIndex(cell, dims)+dims[0];
 	   float ULCV[2];
 	   ULCV[0] = F[ULC*2];
 	   ULCV[1] = F[ULC*2 +1];
 	   //Get points from lower right corner
-	   float LRC = GetPointIndex(cellLocation, dims)+1;
+	   int  LRC = GetPointIndex(cell, dims)+1;
 	   float LRCV[2];
 	   LRCV[0] = F[LRC*2];
 	   LRCV[1] = F[LRC*2 +1];
 	   //Get points from upper right corner
-	   float URC = GetPointIndex(cellLocation, dims)+dims[0] +1;
+	   int  URC = GetPointIndex(cell, dims)+dims[0] +1;
 	   float URCV[2];
 	   URCV[0] = F[URC*2];
 	   URCV[1] = F[URC*2 +1];
-	   float tofX = (pt[0]-X[cellX[0]]) / (X[cellX[1]-X[cellX[0]]);
-	   float tofY = (pt[1]-Y[cellY[0]]) / (Y[cellY[1]-Y[cellY[0]])
+	   float tofX = (pt[0]-X[cellX[0]]) / (X[cellX[1]]-X[cellX[0]]);
+	   float tofY = (pt[1]-Y[cellY[0]]) / (Y[cellY[1]]-Y[cellY[0]]);
 	   float ITV[2];
 	   float IBV[2];
 	   float IBTV[2];
@@ -232,5 +232,4 @@ void EvaluateVectorFieldAtLocation(const float *pt, const int *dims, const float
 	   rv[0] = IBTV[0];
 	   rv[1] = IBTV[1];
 
-   }
 }

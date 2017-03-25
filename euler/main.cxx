@@ -1,3 +1,8 @@
+#include <common.h>
+#include <vtkcommon.h>
+#include <euler.h>
+#include <vtkDataSetReader.h>
+#include <vtkRectilinearGrid.h>
 
 #include <vtkCamera.h>
 #include <vtkDataSetMapper.h>
@@ -6,17 +11,13 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 #include <vtkSmartPointer.h>
-#include <common.h>
-#include <vtkcommon.h>
-#include <euler.h>
 
-
-int main()
+int main(int argc,char **argv)
 {
     int  i, j;
 
     vtkDataSetReader *rdr = vtkDataSetReader::New();
-    rdr->SetFileName("proj4_data.vtk");
+    rdr->SetFileName(argv[1]);
     rdr->Update();
 
     int dims[3];
@@ -71,13 +72,13 @@ int main()
 /*
     vtkDataSetWriter *writer = vtkDataSetWriter::New();
     writer->SetFileName("paths.vtk");
-    writer->SetInput(pd);
+    writer->SetInputData(pd);
     writer->Write();
  */
 
     vtkSmartPointer<vtkDataSetMapper> win1Mapper =
       vtkSmartPointer<vtkDataSetMapper>::New();
-    win1Mapper->SetInput(pd);
+    win1Mapper->SetInputData(pd);
     win1Mapper->SetScalarRange(0, 0.15);
   
     vtkSmartPointer<vtkActor> win1Actor =
