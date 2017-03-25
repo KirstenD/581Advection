@@ -177,17 +177,27 @@ void EvaluateVectorFieldAtLocation(const float *pt, const int *dims, const float
     cellX[1]=0;
     cellY[0]=0;
     cellY[1]=0;
-    
+    if((pt[0] <X[0]) || (pt[0] >X[dims[0]-1])){
+        rv[0] = 0;
+        rv[1] = 0;
+        return;
+    }
+    if((pt[1]< Y[0] )||( pt[1] > Y[dims[1]-1])){
+      rv[0] = 0;
+      rv[1] = 0;
+      return;
+    }
+
     for (int i =0 ; i<dims[0]-1; i++){
-         if (pt[0] > X[i] && pt[0] <=X[i+1]){
+         if (pt[0] > X[i] && pt[0] <X[i+1]){
             cell[0] = i;
             cellX[0] = i;
             cellX[1] = i+1;     
          }
     }
-
+    
     for (int j=0; j<dims[1]-1; j++){
-         if (pt[1] > Y[j] && pt[1] <=Y[j+1]){
+         if (pt[1] > Y[j] && pt[1] <Y[j+1]){
             cellY[0] =j ;
             cellY[1] = j+1;     
             cell[1] = j;     
@@ -227,8 +237,8 @@ void EvaluateVectorFieldAtLocation(const float *pt, const int *dims, const float
 	   IBV[0] = LLCV[0] + tofX*(LRCV[0]-LLCV[0]);
 	   IBV[1] = LLCV[1] + tofX*(LRCV[1]-LLCV[1]);
 	   //interpolate between top and bottom
-	   IBTV[0] = ITV[0]+ tofY*(IBV[0]-ITV[0]);
-	   IBTV[1] = ITV[1]+ tofY*(IBV[1]-ITV[1]);
+	   IBTV[0] = IBV[0]+ tofY*(ITV[0]-IBV[0]);
+	   IBTV[1] = IBV[1]+ tofY*(ITV[1]-IBV[1]);
 	   rv[0] = IBTV[0];
 	   rv[1] = IBTV[1];
 
