@@ -71,7 +71,7 @@ AdvectWithRKStep(const float *pt, const int *dims, const float *X,
 
 			point4[0] = point1[0] + ( h * startEvaluationField3[0] );
 			point4[1] = point1[1] + ( h * startEvaluationField3[1] );
-			EvaluateVectorFieldAtLocation(point3,dims,X,Y,F,startEvaluationField4);
+			EvaluateVectorFieldAtLocation(point4,dims,X,Y,F,startEvaluationField4);
 
 			fieldSum[0] = startEvaluationField1[0] + 2.0*startEvaluationField2[0] + 2.0*startEvaluationField3[0] + startEvaluationField4[0];
 		    fieldSum[1] = startEvaluationField1[1] + 2.0*startEvaluationField2[1] + 2.0*startEvaluationField3[1] + startEvaluationField4[1];

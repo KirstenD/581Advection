@@ -1,6 +1,7 @@
 #include <common.h>
 #include <vtkcommon.h>
 #include <euler.h>
+#include <rk.h>
 #include <vtkDataSetReader.h>
 #include <vtkRectilinearGrid.h>
 
@@ -61,7 +62,7 @@ int main(int argc,char **argv)
     {
        output_locations[i] = new float[(nsteps+1)*2];
        speeds[i] = new float[nsteps];
-       AdvectWithEulerStep(pt[i], dims, X, Y, F, h, nsteps, output_locations[i], speeds[i]);
+       AdvectWithRKStep(pt[i], dims, X, Y, F, h, nsteps, output_locations[i], speeds[i]);
        float length = CalculateArcLength(output_locations[i], nsteps+1);
        cerr << "Arc length for (" << pt[i][0] << ", " << pt[i][1] << ") is " << length << endl;
     }
