@@ -54,20 +54,33 @@ int main(int argc,char **argv)
        cerr << "Velocity at (" << pt[i][0] <<", "<<pt[i][1] << ") is (" << vec[0] << ", " << vec[1] << ")" << endl;
     }
 
-    float h = 0.01;
-    const int nsteps = 5000;
-    float **output_locations = new float*[2*(npts+1)];
-    float **speeds = new float*[npts+1];
-    for (i = 0 ; i < npts ; i++)
+    float h=atof(argv[2]);
+    int nsteps;
+    //const int nsteps = 5000;
+    sscanf(argv[3],"%d",&nsteps);
+    float **output_Euler = new float*[2*(npts+1)];
+    float **output_RK = new float*[2*(npts+1)];
+    float **speeds_Euler = new float*[npts+1];
+    float **speeds_RK = new float*[npts+1];
+   cout << " Number of step" <<nsteps<<endl; 
+   cout << " Number of h" <<h<<endl; 
+   for (i = 0 ; i < npts ; i++)
     {
-       output_locations[i] = new float[(nsteps+1)*2];
-       speeds[i] = new float[nsteps];
-       AdvectWithRKStep(pt[i], dims, X, Y, F, h, nsteps, output_locations[i], speeds[i]);
-       float length = CalculateArcLength(output_locations[i], nsteps+1);
-       cerr << "Arc length for (" << pt[i][0] << ", " << pt[i][1] << ") is " << length << endl;
+       output_Euler[i] = new float[(nsteps+1)*2];
+       output_RK[i] = new float[(nsteps+1)*2];
+       speeds_Euler[i] = new float[nsteps];
+       speeds_RK[i] = new float[nsteps];
+       AdvectWithRKStep(pt[i], dims, X, Y, F, h, nsteps, output_RK[i], speeds_RK[i]);
+       AdvectWithEulerStep(pt[i], dims, X, Y, F, h, nsteps, output_Euler[i], speeds_Euler[i]);
+       float length_Euler = CalculateArcLength(output_Euler[i], nsteps+1);
+       float length_RK = CalculateArcLength(output_RK[i], nsteps+1);
+    
+       cerr << "Arc length for Euler (" << pt[i][0] << ", " << pt[i][1] << ") is " << length_Euler << endl;
+       cerr << "Arc length for RK (" << pt[i][0] << ", " << pt[i][1] << ") is " << length_RK << endl;
     }
 
-    vtkPolyData *pd = CreateVTKPolyData(npts, nsteps, output_locations, speeds);
+    vtkPolyData *pd_Euler = CreateVTKPolyData(npts, nsteps, output_Euler, speeds_Euler);
+    vtkPolyData *pd_RK = CreateVTKPolyData(npts, nsteps, output_RK, speeds_RK);
 
     //This can be useful for debugging
 /*
@@ -79,32 +92,52 @@ int main(int argc,char **argv)
 
     vtkSmartPointer<vtkDataSetMapper> win1Mapper =
       vtkSmartPointer<vtkDataSetMapper>::New();
-    win1Mapper->SetInputData(pd);
+    win1Mapper->SetInputData(pd_Euler);
     win1Mapper->SetScalarRange(0, 0.15);
   
     vtkSmartPointer<vtkActor> win1Actor =
       vtkSmartPointer<vtkActor>::New();
     win1Actor->SetMapper(win1Mapper);
   
-    vtkSmartPointer<vtkRenderer> ren1 =
+vtkSmartPointer<vtkDataSetMapper> win2Mapper =
+      vtkSmartPointer<vtkDataSetMapper>::New();
+    win2Mapper->SetInputData(pd_RK);
+    win2Mapper->SetScalarRange(0, 0.15);
+  
+    vtkSmartPointer<vtkActor> win2Actor =
+      vtkSmartPointer<vtkActor>::New();
+    win2Actor->SetMapper(win2Mapper);
+  
+
+     vtkSmartPointer<vtkRenderer> ren1 =
+      vtkSmartPointer<vtkRenderer>::New();
+  
+ vtkSmartPointer<vtkRenderer> ren2 =
       vtkSmartPointer<vtkRenderer>::New();
   
     vtkSmartPointer<vtkRenderWindow> renWin =
       vtkSmartPointer<vtkRenderWindow>::New();
     renWin->AddRenderer(ren1);
-  
+    renWin->AddRenderer(ren2);
     vtkSmartPointer<vtkRenderWindowInteractor> iren =
       vtkSmartPointer<vtkRenderWindowInteractor>::New();
     iren->SetRenderWindow(renWin);
     ren1->AddActor(win1Actor);
+    ren2->AddActor(win2Actor);
     ren1->SetBackground(0.0, 0.0, 0.0);
-    renWin->SetSize(800, 800);
+    ren2->SetBackground(0.0, 0.0, 0.0);
+    renWin->SetSize(800, 500);
   
     ren1->GetActiveCamera()->SetFocalPoint(5,5,0);
+    ren2->GetActiveCamera()->SetFocalPoint(5,5,0);
     ren1->GetActiveCamera()->SetPosition(5,5,30);
+    ren2->GetActiveCamera()->SetPosition(5,5,30);
     ren1->GetActiveCamera()->SetViewUp(0,1,0);
+    ren2->GetActiveCamera()->SetViewUp(0,1,0);
     ren1->GetActiveCamera()->SetClippingRange(20, 120);
+    ren2->GetActiveCamera()->SetClippingRange(20, 120);
     ren1->GetActiveCamera()->SetDistance(30);
+    ren2->GetActiveCamera()->SetDistance(30);
 
     // This starts the event loop and invokes an initial render.
     //
@@ -112,5 +145,6 @@ int main(int argc,char **argv)
     iren->Start();
 
     delete [] F;
-    pd->Delete();
+    pd_Euler->Delete();
+    pd_RK->Delete();
 }
